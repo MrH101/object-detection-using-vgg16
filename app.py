@@ -43,7 +43,15 @@ def framing(videoPath):
       return frames,count
     return frames,count
 
-
+def listToString(s):
+  # initialize an empty string
+  str1 = "" 
+  # traverse in the string  
+  for ele in s:
+    str1 += ele
+    str1 += " , "  
+    return str1
+  
 def classifyObjects(): 
   classify = []
   format_string = [] 
