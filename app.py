@@ -27,18 +27,18 @@ def framing(videoPath):
 
   frameRate = cap.get(5) 
   tempImage = tempfile.NamedTemporaryFile(delete=False) 
-  x=1
-  while(cap.isOpened()):
-    frameId = cap.get(1) 
+  x=0
+  while(True):
+    #frameId = cap.get(1) 
     ret, frame = cap.read()
-    if (ret != True):
-      break
-    if (frameId % math.floor(frameRate) == 0):     
-      tempImage = videoPath.split('.')[0] +"_frame%d.jpg" % count;count+=1
+    if ret:
+      tempImage=videoPath+str(x)+'.jpg'
       cv2.imwrite(tempImage, frame)
-      frames.append(tempImage)
+      x+=1
   cap.release() 
   return frames,count
+
+
 def classifyObjects():  
   model = VGG16() 
   format_string = [] 
