@@ -1,6 +1,3 @@
-#importing modules to be used in developing the video object detection model
-
-
 import streamlit as st
 import tempfile
 import cv2    
@@ -12,7 +9,6 @@ from keras.applications.vgg16 import preprocess_input
 from keras.applications.vgg16 import decode_predictions
 from keras.applications.vgg16 import VGG16
 from PIL import Image
-model = VGG16() 
 
 st.title("vgg16 object detection")
 def upload_vid():
@@ -23,37 +19,25 @@ def upload_vid():
   return vids.name 
       
 def framing(videoPath):
-  cap = cv2.VideoCapture(videoPath)
+  count = 0
+  cap = cv2.VideoCapture(videoPath)   
+
   frameRate = cap.get(5) 
   tempImage = tempfile.NamedTemporaryFile(delete=False) 
   x=1
-  count = 0
-  # Splitting video frames into photos
   while(cap.isOpened()):
     frameId = cap.get(1) 
     ret, frame = cap.read()
     if (ret != True):
       break
-    if (frameId % math.floor(frameRate) == 0):
-      tempImage = videoPath.split('.')[0] +"_frame%d.jpg" % count;
-      count+=1
+    if (frameId % math.floor(frameRate) == 0):     
+      tempImage = videoPath.split('.')[0] +"_frame%d.jpg" % count;count+=1
       cv2.imwrite(tempImage, frame)
       frames.append(tempImage)
-      cap.release() 
-      return frames,count
-    return frames,count
-
-def listToString(s):
-  # initialize an empty string
-  str1 = "" 
-  # traverse in the string  
-  for ele in s:
-    str1 += ele
-    str1 += " , "  
-    return str1
-  
-def classifyObjects(): 
-  classify = []
+  cap.release() 
+  return frames,count
+def classifyObjects():  
+  model = VGG16() 
   format_string = [] 
   frames,count = framing(videoFile)
 
@@ -64,26 +48,20 @@ def classifyObjects():
     image = preprocess_input(image)   
     prediction = model.predict(image)  
     label = decode_predictions(prediction)
-    label2 = label[0] 
-    label3=label2[:4]
-    #result =  label2[1]
-    label4=[]
-    for item in label3:
-      label4.append(item[1])
-    itemString = listToString(label4)
-    return label4
-    #format_string.append(result)
-  #return format_string
+    label = label[0][0] 
+    result =  label[1]
+    format_string.append(result)
+  return format_string
 
 user_input = st.text_input("Enter object to be searched: ")
 videoFile = upload_vid()
 
 def compare_frames(object_):
   indexes = []
-  label4 = classifyObjects()
-  if object_ in label4:
-    for i in range(len(label4)):
-      if label4[i] == object_:
+  format_string = classifyObjects()
+  if object_ in format_string:
+    for i in range(len(format_string)):
+      if format_string[i] == object_:
         index = format_string.index(object_)
         indexes.append(index)
         filePath = frames[index]
