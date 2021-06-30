@@ -71,9 +71,9 @@ videoFile = upload_vid()
 def compare_frames(object_):
   indexes = []
   label4 = classifyObjects()
-  if object_ inlabel4:
+  if object_ in label4:
     for i in range(len(label4)):
-      if format_string[i] == object_:
+      if label4[i] == object_:
         index = format_string.index(object_)
         indexes.append(index)
         filePath = frames[index]
