@@ -75,8 +75,7 @@ def searchInFrames(object_):
 videoFile = uploadFile()
 user_input = st.text_input("Enter the object you are searching: ")
 
-if st.button('Search'):
-  classifyObjects(videoFile)  
+if st.button('Search'):  
   frames =[]
   detected_paths = []
   searchInFrames(user_input)
