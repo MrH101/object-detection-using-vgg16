@@ -89,6 +89,3 @@ if st.button('search'):
   detected_paths = []
   compare_frames(user_input)
   st.write("")
-
-if __name__ == '__main__':
-  main()
