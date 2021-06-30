@@ -1,6 +1,6 @@
 #importing modules to be used in developing the video object detection model
 
-%%writefile object_detection.py
+
 import streamlit as st
 import tempfile
 import cv2    
