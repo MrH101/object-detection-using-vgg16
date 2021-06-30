@@ -12,6 +12,7 @@ from keras.applications.vgg16 import preprocess_input
 from keras.applications.vgg16 import decode_predictions
 from keras.applications.vgg16 import VGG16
 from PIL import Image
+model = VGG16() 
 
 st.title("vgg16 object detection")
 def upload_vid():
@@ -22,25 +23,27 @@ def upload_vid():
   return vids.name 
       
 def framing(videoPath):
-  count = 0
-  cap = cv2.VideoCapture(videoPath)   
-
+  cap = cv2.VideoCapture(videoPath)
   frameRate = cap.get(5) 
   tempImage = tempfile.NamedTemporaryFile(delete=False) 
-  x=0
-  while(True):
-    #frameId = cap.get(1) 
-    ret, frame = cap.read()
-    if ret:
-      tempImage=videoPath+str(x)+'.jpg'
-      cv2.imwrite(tempImage, frame)
-      x+=1
-  cap.release() 
+  x=1
+  # Splitting video frames into photos
+  while(cap.isOpened()):
+  frameId = cap.get(1) 
+  ret, frame = cap.read()
+  if (ret != True):
+    break
+  if (frameId % math.floor(frameRate) == 0):
+    tempImage = videoPath.split('.')[0] +"_frame%d.jpg" % count;count+=1
+    cv2.imwrite(tempImage, frame)
+    frames.append(tempImage)
+    cap.release() 
+    return frames,count
   return frames,count
 
 
-def classifyObjects():  
-  model = VGG16() 
+def classifyObjects(): 
+  classify = []
   format_string = [] 
   frames,count = framing(videoFile)
 
@@ -51,19 +54,25 @@ def classifyObjects():
     image = preprocess_input(image)   
     prediction = model.predict(image)  
     label = decode_predictions(prediction)
-    label = label[0][0] 
-    result =  label[1]
-    format_string.append(result)
-  return format_string
+    label2 = label[0] 
+    label3=label2[:4]
+    #result =  label2[1]
+    label4=[]
+    for item in label3:
+      label4.append(item[1])
+    itemString = listToString(label4)
+    return label4
+    #format_string.append(result)
+  #return format_string
 
 user_input = st.text_input("Enter object to be searched: ")
 videoFile = upload_vid()
 
 def compare_frames(object_):
   indexes = []
-  format_string = classifyObjects()
-  if object_ in format_string:
-    for i in range(len(format_string)):
+  label4 = classifyObjects()
+  if object_ inlabel4:
+    for i in range(len(label4)):
       if format_string[i] == object_:
         index = format_string.index(object_)
         indexes.append(index)
@@ -80,3 +89,6 @@ if st.button('search'):
   detected_paths = []
   compare_frames(user_input)
   st.write("")
+
+if __name__ == '__main__':
+  main()
