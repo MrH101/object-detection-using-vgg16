@@ -29,17 +29,17 @@ def framing(videoPath):
   x=1
   # Splitting video frames into photos
   while(cap.isOpened()):
-  frameId = cap.get(1) 
-  ret, frame = cap.read()
-  if (ret != True):
-    break
-  if (frameId % math.floor(frameRate) == 0):
-    tempImage = videoPath.split('.')[0] +"_frame%d.jpg" % count;count+=1
-    cv2.imwrite(tempImage, frame)
-    frames.append(tempImage)
-    cap.release() 
+    frameId = cap.get(1) 
+    ret, frame = cap.read()
+    if (ret != True):
+      break
+    if (frameId % math.floor(frameRate) == 0):
+      tempImage = videoPath.split('.')[0] +"_frame%d.jpg" % count;count+=1
+      cv2.imwrite(tempImage, frame)
+      frames.append(tempImage)
+      cap.release() 
+      return frames,count
     return frames,count
-  return frames,count
 
 
 def classifyObjects(): 
