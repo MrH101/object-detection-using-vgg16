@@ -41,7 +41,7 @@ def splitVideo(videoPath):
 def classifyObjects():  
   model = VGG16()
   classify = []
-  frames,count = splitVideo(videoFile)
+  frames,count = splitVideo(vid_File)
   print(count)
 
   for i in range(count):    
@@ -72,10 +72,10 @@ def searchInFrames(object_):
   else:
     st.write("The object NOT FOUND.")
 
-videoFile = uploadFile()
+vid_File = uploadFile()
 user_input = st.text_input("Enter the object you are searching: ")
 
-if st.button('Search'):  
+if st.button('Search'):
   frames =[]
   detected_paths = []
   searchInFrames(user_input)
